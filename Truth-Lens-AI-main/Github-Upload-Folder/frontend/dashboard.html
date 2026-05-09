@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>TruthLens AI — Admin Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+<style>
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem}
+.stat-card{padding:1.5rem;border-radius:var(--radius);background:var(--glass);border:1px solid var(--glass-border);text-align:center;transition:transform .2s}
+.stat-card:hover{transform:translateY(-4px)}
+.stat-num{font-size:2.8rem;font-weight:800;letter-spacing:-.04em;line-height:1}
+.stat-label{font-size:.82rem;color:var(--text-muted);margin-top:.5rem;text-transform:uppercase;letter-spacing:.05em}
+.fake-num{color:var(--red)}
+.real-num{color:var(--green)}
+.susp-num{color:var(--yellow)}
+.total-num{background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+.dash-row{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem}
+@media(max-width:700px){.dash-row{grid-template-columns:1fr}}
+
+.dash-card{padding:1.5rem;border-radius:var(--radius);background:var(--glass);border:1px solid var(--glass-border)}
+.dash-card-title{font-size:.95rem;font-weight:700;margin-bottom:1.25rem;display:flex;align-items:center;gap:.5rem}
+
+/* Table */
+.recent-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.recent-table th{text-align:left;padding:.5rem .75rem;color:var(--text-muted);font-weight:500;border-bottom:1px solid var(--glass-border);font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}
+.recent-table td{padding:.65rem .75rem;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
+.recent-table tr:hover td{background:rgba(255,255,255,.02)}
+.verdict-pill{font-size:.72rem;padding:.2rem .6rem;border-radius:20px;font-weight:600}
+.pill-FAKE{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3)}
+.pill-REAL{background:rgba(16,185,129,.15);color:#6ee7b7;border:1px solid rgba(16,185,129,.3)}
+.pill-SUSPICIOUS{background:rgba(245,158,11,.15);color:#fcd34d;border:1px solid rgba(245,158,11,.3)}
+.type-icon{font-size:1rem}
+.conf-bar-mini{display:inline-block;width:60px;height:5px;background:rgba(255,255,255,.07);border-radius:99px;vertical-align:middle;margin-right:.4rem;overflow:hidden}
+.conf-fill-mini{height:100%;background:linear-gradient(90deg,var(--purple),var(--cyan));border-radius:99px}
+
+/* Donut chart */
+.donut-wrap{display:flex;align-items:center;gap:2rem;flex-wrap:wrap}
+.donut-svg{width:140px;height:140px;flex-shrink:0}
+.donut-legend{display:flex;flex-direction:column;gap:.75rem}
+.legend-item{display:flex;align-items:center;gap:.6rem;font-size:.88rem}
+.legend-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+
+/* Word cloud */
+#keyword-canvas{width:100%;height:200px;border-radius:10px;background:rgba(0,0,0,.2)}
+
+.refresh-btn{font-size:.8rem;padding:.35rem .85rem;background:var(--glass);border:1px solid var(--glass-border);border-radius:8px;color:var(--text-muted);cursor:pointer;transition:all .2s;float:right;margin-top:-.25rem}
+.refresh-btn:hover{color:var(--cyan);border-color:rgba(0,212,255,.3)}
+.last-refresh{font-size:.75rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-top:.5rem}
+</style>
+</head>
+<body>
+<canvas id="particle-canvas"></canvas>
+
+<nav class="navbar">
+  <div class="nav-brand">
+    <div class="brand-icon">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <circle cx="14" cy="14" r="13" stroke="url(#g1)" stroke-width="2"/>
+        <path d="M8 14l4 4 8-8" stroke="#00d4ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs><linearGradient id="g1" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#7c3aed"/><stop offset="1" stop-color="#00d4ff"/></linearGradient></defs>
+      </svg>
+    </div>
+    <span class="brand-name">TruthLens <span class="brand-ai">AI</span></span>
+  </div>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Analyzer</a>
+    <a href="dashboard.html" class="nav-link active">Dashboard</a>
+    <div class="nav-badge">🟢 Live</div>
+  </div>
+</nav>
+
+<main style="position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:2.5rem 1.5rem 4rem">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem">
+    <div>
+      <h1 style="font-size:1.8rem;font-weight:800;letter-spacing:-.03em">📊 Admin Dashboard</h1>
+      <p style="color:var(--text-muted);font-size:.9rem;margin-top:.3rem">Real-time misinformation detection analytics</p>
+    </div>
+    <button class="refresh-btn" onclick="loadDashboard()" style="float:none">🔄 Refresh</button>
+  </div>
+
+  <!-- Stats row -->
+  <div class="dash-grid">
+    <div class="stat-card">
+      <div class="stat-num total-num" id="stat-total">—</div>
+      <div class="stat-label">Total Analyses</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num fake-num" id="stat-fake">—</div>
+      <div class="stat-label">🔴 Fake Detected</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num real-num" id="stat-real">—</div>
+      <div class="stat-label">🟢 Verified Real</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num susp-num" id="stat-susp">—</div>
+      <div class="stat-label">🟡 Suspicious</div>
+    </div>
+  </div>
+
+  <!-- Charts row -->
+  <div class="dash-row">
+    <div class="dash-card">
+      <div class="dash-card-title">🥧 Verdict Distribution</div>
+      <div class="donut-wrap">
+        <svg class="donut-svg" viewBox="0 0 140 140" id="donut-svg">
+          <circle cx="70" cy="70" r="54" fill="none" stroke="#1e1e3a" stroke-width="18"/>
+          <circle cx="70" cy="70" r="54" fill="none" stroke="#ef4444" stroke-width="18"
+                  stroke-dasharray="339.3" stroke-dashoffset="339.3" id="donut-fake"
+                  stroke-linecap="butt" transform="rotate(-90 70 70)"/>
+          <circle cx="70" cy="70" r="54" fill="none" stroke="#10b981" stroke-width="18"
+                  stroke-dasharray="339.3" stroke-dashoffset="339.3" id="donut-real"
+                  stroke-linecap="butt" transform="rotate(-90 70 70)"/>
+          <circle cx="70" cy="70" r="54" fill="none" stroke="#f59e0b" stroke-width="18"
+                  stroke-dasharray="339.3" stroke-dashoffset="339.3" id="donut-susp"
+                  stroke-linecap="butt" transform="rotate(-90 70 70)"/>
+          <text x="70" y="65" text-anchor="middle" fill="#e2e8f0" font-size="22" font-weight="700" id="donut-pct">—</text>
+          <text x="70" y="82" text-anchor="middle" fill="#64748b" font-size="9">FAKE RATE</text>
+        </svg>
+        <div class="donut-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div><span id="leg-fake">— Fake</span></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div><span id="leg-real">— Real</span></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div><span id="leg-susp">— Suspicious</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-card-title">🔥 Trending Misinformation Keywords</div>
+      <canvas id="keyword-canvas"></canvas>
+    </div>
+  </div>
+
+  <!-- Recent submissions -->
+  <div class="dash-card" style="margin-bottom:1.5rem">
+    <div class="dash-card-title">
+      🕒 Recent Submissions
+      <span class="last-refresh" id="last-refresh" style="margin-left:auto;font-size:.75rem"></span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="recent-table">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Content</th>
+            <th>Verdict</th>
+            <th>Confidence</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody id="recent-tbody">
+          <tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:2rem">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <p>TruthLens AI Admin &copy; 2025 · Auto-refreshes every 30s · <a href="index.html">← Back to Analyzer</a></p>
+</footer>
+
+<script>
+// Particle canvas (inline mini version)
+const canvas = document.getElementById('particle-canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+const pts = Array.from({length:50},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,dx:(Math.random()-.5)*.35,dy:(Math.random()-.5)*.35,r:Math.random()*1.2+.4,a:Math.random()*.4+.1}));
+(function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);pts.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.x<0)p.x=canvas.width;if(p.x>canvas.width)p.x=0;if(p.y<0)p.y=canvas.height;if(p.y>canvas.height)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(124,58,237,${p.a})`;ctx.fill();});requestAnimationFrame(draw);})();
+
+const API = 'http://localhost:8000';
+
+async function loadDashboard() {
+  try {
+    const res = await fetch(`${API}/dashboard-data`);
+    const d = await res.json();
+
+    document.getElementById('stat-total').textContent = d.total;
+    document.getElementById('stat-fake').textContent = d.fake_count;
+    document.getElementById('stat-real').textContent = d.real_count;
+    document.getElementById('stat-susp').textContent = d.suspicious_count;
+
+    renderDonut(d.fake_percentage, d.real_percentage, d.suspicious_percentage, d.fake_count, d.real_count, d.suspicious_count);
+    renderKeywords(d.trending_keywords || []);
+    renderRecent(d.recent || []);
+
+    document.getElementById('last-refresh').textContent = 'Updated: ' + new Date().toLocaleTimeString();
+  } catch(e) {
+    document.getElementById('recent-tbody').innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--red);padding:2rem">⚠ Cannot connect to backend. Start uvicorn on port 8000.</td></tr>`;
+  }
+}
+
+function renderDonut(fakePct, realPct, suspPct, fakeN, realN, suspN) {
+  const circ = 339.3;
+  const fakeLen = (fakePct/100)*circ;
+  const realLen = (realPct/100)*circ;
+  const suspLen = (suspPct/100)*circ;
+
+  const fakeEl = document.getElementById('donut-fake');
+  const realEl = document.getElementById('donut-real');
+  const suspEl = document.getElementById('donut-susp');
+
+  fakeEl.style.strokeDasharray = `${fakeLen} ${circ}`;
+  fakeEl.style.strokeDashoffset = '0';
+
+  const realOffset = -(fakeLen);
+  realEl.style.strokeDasharray = `${realLen} ${circ}`;
+  realEl.style.strokeDashoffset = realOffset;
+
+  const suspOffset = -(fakeLen + realLen);
+  suspEl.style.strokeDasharray = `${suspLen} ${circ}`;
+  suspEl.style.strokeDashoffset = suspOffset;
+
+  document.getElementById('donut-pct').textContent = fakePct + '%';
+  document.getElementById('leg-fake').textContent = `${fakeN} Fake (${fakePct}%)`;
+  document.getElementById('leg-real').textContent = `${realN} Real (${realPct}%)`;
+  document.getElementById('leg-susp').textContent = `${suspN} Suspicious (${suspPct}%)`;
+}
+
+function renderKeywords(keywords) {
+  const canvas = document.getElementById('keyword-canvas');
+  canvas.width = canvas.offsetWidth || 400;
+  canvas.height = 200;
+  const c = canvas.getContext('2d');
+  c.clearRect(0, 0, canvas.width, canvas.height);
+
+  if (!keywords.length) {
+    c.fillStyle = 'rgba(100,116,139,0.5)';
+    c.font = '14px Inter';
+    c.textAlign = 'center';
+    c.fillText('No keywords yet — analyze some content!', canvas.width/2, 100);
+    return;
+  }
+
+  const maxFreq = keywords[0]?.frequency || 1;
+  const colors = ['#7c3aed','#00d4ff','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4'];
+  const placed = [];
+
+  keywords.slice(0, 25).forEach((kw, i) => {
+    const size = Math.max(11, Math.min(32, (kw.frequency / maxFreq) * 32));
+    c.font = `${Math.round(size)}px Inter`;
+    const w = c.measureText(kw.keyword).width + 16;
+    const h = size + 8;
+
+    let x, y, attempts = 0, ok = false;
+    while (attempts < 80 && !ok) {
+      x = Math.random() * (canvas.width - w) + w/2;
+      y = Math.random() * (canvas.height - h) + h/2;
+      ok = placed.every(p => Math.abs(p.x-x) > (p.w+w)/2+4 || Math.abs(p.y-y) > (p.h+h)/2+4);
+      attempts++;
+    }
+    placed.push({x, y, w, h});
+
+    c.fillStyle = colors[i % colors.length] + 'cc';
+    c.font = `${Math.round(size)}px Inter`;
+    c.textAlign = 'center';
+    c.textBaseline = 'middle';
+    c.fillText(kw.keyword, x, y);
+  });
+}
+
+function renderRecent(rows) {
+  const tbody = document.getElementById('recent-tbody');
+  if (!rows.length) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:2rem">No submissions yet</td></tr>';
+    return;
+  }
+  const typeIcon = {text:'📝', image:'🖼', video:'🎥', url:'🔗'};
+  tbody.innerHTML = rows.map(r => {
+    const conf = Math.round(r.confidence * 100);
+    const summary = (r.input_summary || '').slice(0, 60) + ((r.input_summary || '').length > 60 ? '…' : '');
+    const time = new Date(r.created_at).toLocaleTimeString();
+    return `<tr>
+      <td><span class="type-icon">${typeIcon[r.input_type] || '📄'}</span> ${r.input_type}</td>
+      <td style="max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.input_summary}">${summary}</td>
+      <td><span class="verdict-pill pill-${r.verdict}">${r.verdict}</span></td>
+      <td><span class="conf-bar-mini"><span class="conf-fill-mini" style="width:${conf}%"></span></span>${conf}%</td>
+      <td style="color:var(--text-muted);font-family:'JetBrains Mono',monospace;font-size:.78rem">${time}</td>
+    </tr>`;
+  }).join('');
+}
+
+loadDashboard();
+setInterval(loadDashboard, 30000);
+</script>
+</body>
+</html>

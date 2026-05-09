@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>TruthLens AI — Real-Time Misinformation Detection</title>
+<meta name="description" content="Multi-modal AI system detecting fake news, deepfakes, and misinformation in real time with explainable AI."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ══ PARTICLE CANVAS ══ -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="navbar">
+  <div class="nav-brand">
+    <div class="brand-icon">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <circle cx="14" cy="14" r="13" stroke="url(#g1)" stroke-width="2"/>
+        <path d="M8 14l4 4 8-8" stroke="#00d4ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs><linearGradient id="g1" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#7c3aed"/><stop offset="1" stop-color="#00d4ff"/></linearGradient></defs>
+      </svg>
+    </div>
+    <span class="brand-name">TruthLens <span class="brand-ai">AI</span></span>
+  </div>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link active" id="nav-analyzer">Analyzer</a>
+    <a href="dashboard.html" class="nav-link" id="nav-dashboard">Dashboard</a>
+    <div class="nav-badge">🟢 Live</div>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<header class="hero">
+  <div class="hero-tag">Multi-Modal AI · Explainable · Real-Time</div>
+  <h1 class="hero-title">Detect Misinformation<br/><span class="gradient-text">Before It Spreads</span></h1>
+  <p class="hero-subtitle">Powered by NLP + Computer Vision AI — analyze text, images, and URLs instantly with full XAI explanations.</p>
+</header>
+
+<!-- ══ MAIN ANALYZER ══ -->
+<main class="analyzer-container">
+
+  <!-- Input Tabs -->
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-text" onclick="switchTab('text')">
+      <span class="tab-icon">📝</span> Text
+    </button>
+    <button class="tab-btn" id="tab-image" onclick="switchTab('image')">
+      <span class="tab-icon">🖼</span> Image
+    </button>
+    <button class="tab-btn" id="tab-video" onclick="switchTab('video')">
+      <span class="tab-icon">🎥</span> Video
+    </button>
+    <button class="tab-btn" id="tab-url" onclick="switchTab('url')">
+      <span class="tab-icon">🔗</span> URL
+    </button>
+  </div>
+
+  <!-- ── TEXT PANEL ── -->
+  <div class="input-panel active" id="panel-text">
+    <div class="input-card glass">
+      <label class="input-label">Paste Article / News / Social Post</label>
+      <textarea id="text-input" class="text-area" placeholder="Paste any news article, social media post, WhatsApp message, or headline here...
+
+Example: 'BREAKING: Scientists EXPOSED for lying about vaccines — share before deleted!'"></textarea>
+      <div class="input-row">
+        <div class="char-count"><span id="char-count">0</span> characters</div>
+        <input type="text" id="url-hint" class="url-hint-input" placeholder="Source URL (optional, improves accuracy)"/>
+      </div>
+      <button class="analyze-btn" id="btn-analyze-text" onclick="analyzeText()">
+        <span class="btn-icon">🔍</span> Analyze Now
+        <span class="btn-shine"></span>
+      </button>
+    </div>
+    <!-- Sample texts -->
+    <div class="sample-bar">
+      <span class="sample-label">Try a sample:</span>
+      <button class="sample-btn" onclick="loadSample('fake')">🔴 Fake News</button>
+      <button class="sample-btn" onclick="loadSample('real')">🟢 Real News</button>
+      <button class="sample-btn" onclick="loadSample('hinglish')">🇮🇳 Hinglish</button>
+    </div>
+  </div>
+
+  <!-- ── IMAGE PANEL ── -->
+  <div class="input-panel" id="panel-image">
+    <div class="input-card glass">
+      <label class="input-label">Upload Image for Deepfake Detection</label>
+      <div class="drop-zone" id="drop-zone" onclick="document.getElementById('img-input').click()"
+           ondragover="event.preventDefault();this.classList.add('drag-over')"
+           ondragleave="this.classList.remove('drag-over')"
+           ondrop="handleDrop(event)">
+        <div class="drop-icon">🖼</div>
+        <div class="drop-text">Drop image here or <span class="drop-link">click to upload</span></div>
+        <div class="drop-hint">JPEG · PNG · WebP · BMP · Max 15MB</div>
+        <img id="img-preview" class="img-preview" style="display:none"/>
+      </div>
+      <input type="file" id="img-input" accept="image/*" style="display:none" onchange="handleImageSelect(event)"/>
+      <button class="analyze-btn" id="btn-analyze-image" onclick="analyzeImage()" disabled>
+        <span class="btn-icon">🔍</span> Analyze Image
+        <span class="btn-shine"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── VIDEO PANEL ── -->
+  <div class="input-panel" id="panel-video">
+    <div class="input-card glass">
+      <label class="input-label">Upload Video for Deepfake Detection</label>
+      <div class="drop-zone" id="drop-zone-video" onclick="document.getElementById('video-input').click()"
+           ondragover="event.preventDefault();this.classList.add('drag-over')"
+           ondragleave="this.classList.remove('drag-over')"
+           ondrop="handleVideoDrop(event)">
+        <div class="drop-icon">🎥</div>
+        <div class="drop-text" id="drop-text-video">Drop video here or <span class="drop-link">click to upload</span></div>
+        <div class="drop-hint">MP4 · WebM · AVI · MOV · Max 50MB</div>
+        <video id="video-preview" controls class="img-preview" style="display:none; max-width: 100%; border-radius: 8px; margin-top: 15px;" onclick="event.stopPropagation()"></video>
+      </div>
+      <input type="file" id="video-input" accept="video/*" style="display:none" onchange="handleVideoSelect(event)"/>
+      <button class="analyze-btn" id="btn-analyze-video" onclick="analyzeVideo()" disabled>
+        <span class="btn-icon">🔍</span> Analyze Video
+        <span class="btn-shine"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── URL PANEL ── -->
+  <div class="input-panel" id="panel-url">
+    <div class="input-card glass">
+      <label class="input-label">Check URL / Domain Credibility</label>
+      <div class="url-input-wrapper">
+        <span class="url-prefix">🔗</span>
+        <input type="url" id="url-input" class="url-field" placeholder="https://example.com/some-article"/>
+      </div>
+      <div class="url-presets">
+        <span class="sample-label">Quick test:</span>
+        <button class="sample-btn" onclick="setURL('https://reuters.com')">reuters.com</button>
+        <button class="sample-btn" onclick="setURL('https://naturalnews.com')">naturalnews.com</button>
+        <button class="sample-btn" onclick="setURL('https://boomlive.in')">boomlive.in</button>
+      </div>
+      <button class="analyze-btn" id="btn-analyze-url" onclick="analyzeURL()">
+        <span class="btn-icon">🔍</span> Check Source
+        <span class="btn-shine"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ RESULTS PANEL ══ -->
+  <div class="results-panel" id="results-panel" style="display:none">
+
+    <!-- Verdict banner -->
+    <div class="verdict-banner" id="verdict-banner">
+      <div class="verdict-icon" id="verdict-icon">⚡</div>
+      <div class="verdict-content">
+        <div class="verdict-label" id="verdict-label">Analyzing...</div>
+        <div class="verdict-sub" id="verdict-sub">Processing your content</div>
+      </div>
+      <div class="verdict-badge" id="verdict-badge">—</div>
+    </div>
+
+    <!-- Confidence meter -->
+    <div class="metric-row">
+      <div class="metric-card glass">
+        <div class="metric-label">AI Confidence</div>
+        <div class="confidence-bar-wrap">
+          <div class="confidence-bar" id="confidence-bar"></div>
+        </div>
+        <div class="metric-value" id="confidence-value">—%</div>
+      </div>
+      <div class="metric-card glass" id="credibility-card" style="display:none">
+        <div class="metric-label">Source Credibility</div>
+        <div class="credibility-ring-wrap">
+          <svg class="cred-ring" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="34" fill="none" stroke="#1e1e3a" stroke-width="8"/>
+            <circle cx="40" cy="40" r="34" fill="none" stroke="url(#ringGrad)" stroke-width="8"
+                    stroke-dasharray="213.6" stroke-dashoffset="213.6"
+                    stroke-linecap="round" id="cred-circle" transform="rotate(-90 40 40)"/>
+            <defs>
+              <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#7c3aed"/>
+                <stop offset="100%" stop-color="#00d4ff"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="cred-score" id="cred-score">—</div>
+        </div>
+        <div class="metric-value" id="cred-label">Credibility Score</div>
+      </div>
+      <div class="metric-card glass" id="verification-card" style="display:none">
+        <div class="metric-label">Verification Status</div>
+        <div class="verify-status" id="verify-status">—</div>
+        <div class="verify-sources" id="verify-sources"></div>
+      </div>
+    </div>
+
+    <!-- XAI Signals -->
+    <div class="section-card glass" id="signals-section" style="display:none">
+      <h3 class="section-title">🧠 AI Reasoning — Explainable Signals</h3>
+      <div class="signals-list" id="signals-list"></div>
+    </div>
+
+    <!-- Highlighted phrases -->
+    <div class="section-card glass" id="phrases-section" style="display:none">
+      <h3 class="section-title">⚠️ Suspicious Phrases Detected</h3>
+      <div class="phrases-wrap" id="phrases-list"></div>
+    </div>
+
+    <!-- Image analysis detail -->
+    <div class="section-card glass" id="image-detail-section" style="display:none">
+      <h3 class="section-title">🔬 Deepfake Analysis Scores</h3>
+      <div class="analysis-scores" id="analysis-scores"></div>
+      <div class="artifacts-list" id="artifacts-list"></div>
+    </div>
+
+    <!-- Recommendation -->
+    <div class="section-card glass" id="recommendation-section" style="display:none">
+      <h3 class="section-title">💡 Recommendation</h3>
+      <div class="recommendation-text" id="recommendation-text"></div>
+    </div>
+
+    <!-- URL flags -->
+    <div class="section-card glass" id="flags-section" style="display:none">
+      <h3 class="section-title">🚩 Domain Flags</h3>
+      <div class="flags-list" id="flags-list"></div>
+    </div>
+
+    <!-- Processing time -->
+    <div class="processing-tag" id="processing-tag"></div>
+  </div>
+
+  <!-- ══ LOADING OVERLAY ══ -->
+  <div class="loading-overlay" id="loading-overlay" style="display:none">
+    <div class="loading-card glass">
+      <div class="spinner-ring"></div>
+      <div class="loading-text" id="loading-text">Initializing AI models...</div>
+      <div class="loading-steps" id="loading-steps"></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ══ WHATSAPP CHECKER BANNER ══ -->
+<section class="feature-strip">
+  <div class="feature-item">
+    <span class="fi-icon">📱</span>
+    <div>
+      <div class="fi-title">WhatsApp Forward Checker</div>
+      <div class="fi-sub">Paste any forwarded message to instantly verify</div>
+    </div>
+  </div>
+  <div class="feature-divider"></div>
+  <div class="feature-item">
+    <span class="fi-icon">🇮🇳</span>
+    <div>
+      <div class="fi-title">Hinglish / Hindi Support</div>
+      <div class="fi-sub">Detect regional misinformation in Indian languages</div>
+    </div>
+  </div>
+  <div class="feature-divider"></div>
+  <div class="feature-item">
+    <span class="fi-icon">⚡</span>
+    <div>
+      <div class="fi-title">Real-Time Analysis</div>
+      <div class="fi-sub">&lt;500ms average response time</div>
+    </div>
+  </div>
+  <div class="feature-divider"></div>
+  <div class="feature-item">
+    <span class="fi-icon">🔍</span>
+    <div>
+      <div class="fi-title">Explainable AI</div>
+      <div class="fi-sub">Every verdict backed by human-readable reasoning</div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>TruthLens AI &copy; 2025 — Built for Hackathon Demo · <a href="dashboard.html">Admin Dashboard</a></p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

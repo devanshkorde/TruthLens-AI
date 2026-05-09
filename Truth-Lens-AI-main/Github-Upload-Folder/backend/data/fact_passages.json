@@ -1,0 +1,292 @@
+[
+  {
+    "text": "COVID-19 vaccines have been rigorously tested in clinical trials and approved by the WHO, FDA, and EMA for safety and efficacy in preventing severe disease and hospitalization.",
+    "label": "verified",
+    "topic": "health/vaccines"
+  },
+  {
+    "text": "COVID-19 vaccines contain microchips or nanotechnology to track and control people through 5G networks.",
+    "label": "misinformation",
+    "topic": "health/vaccines"
+  },
+  {
+    "text": "COVID-19 vaccines cause infertility and alter human DNA permanently.",
+    "label": "misinformation",
+    "topic": "health/vaccines"
+  },
+  {
+    "text": "mRNA vaccines do not alter human DNA; they provide temporary instructions for cells to produce a protein that triggers an immune response.",
+    "label": "verified",
+    "topic": "health/vaccines"
+  },
+  {
+    "text": "Russia invaded Ukraine in February 2022 in what it called a 'special military operation', condemned by the United Nations and most world governments.",
+    "label": "verified",
+    "topic": "geopolitics/ukraine"
+  },
+  {
+    "text": "NATO is secretly planning a biological weapons attack on Russian civilians disguised as humanitarian aid.",
+    "label": "misinformation",
+    "topic": "geopolitics/ukraine"
+  },
+  {
+    "text": "Ukraine was committing genocide against Russian-speaking populations in Donbas, a claim used to justify the invasion but rejected by international human rights organizations.",
+    "label": "misinformation",
+    "topic": "geopolitics/ukraine"
+  },
+  {
+    "text": "Global surface temperatures have risen by approximately 1.1 degrees Celsius above pre-industrial levels, driven primarily by human greenhouse gas emissions according to IPCC.",
+    "label": "verified",
+    "topic": "climate"
+  },
+  {
+    "text": "Climate change is a hoax invented by scientists to secure research funding and by governments to impose carbon taxes.",
+    "label": "misinformation",
+    "topic": "climate"
+  },
+  {
+    "text": "97% of actively publishing climate scientists agree that current climate change is mainly caused by human activities.",
+    "label": "verified",
+    "topic": "climate"
+  },
+  {
+    "text": "The 2024 Indian general elections were conducted by the Election Commission of India with electronic voting machines across all 543 Lok Sabha constituencies.",
+    "label": "verified",
+    "topic": "india/elections"
+  },
+  {
+    "text": "Electronic voting machines in India have been hacked and manipulated to change election results in favour of a specific political party.",
+    "label": "misinformation",
+    "topic": "india/elections"
+  },
+  {
+    "text": "The Indian government implemented demonetization in November 2016, withdrawing 500 and 1000 rupee notes from circulation.",
+    "label": "verified",
+    "topic": "india/economy"
+  },
+  {
+    "text": "Demonetization completely eliminated black money in India and all hoarded cash was destroyed.",
+    "label": "misinformation",
+    "topic": "india/economy"
+  },
+  {
+    "text": "India's UPI payment system processed over 100 billion transactions in FY2023-24, making it one of the world's largest real-time payment systems.",
+    "label": "verified",
+    "topic": "india/technology"
+  },
+  {
+    "text": "5G towers are responsible for spreading COVID-19 or cancer through electromagnetic radiation.",
+    "label": "misinformation",
+    "topic": "technology/5g"
+  },
+  {
+    "text": "5G networks operate on radio frequencies approved by regulatory bodies and there is no scientific evidence linking them to health risks.",
+    "label": "verified",
+    "topic": "technology/5g"
+  },
+  {
+    "text": "The Earth is a globe roughly 12,742 km in diameter, a fact confirmed by space agencies, satellite imagery, and centuries of scientific observation.",
+    "label": "verified",
+    "topic": "science/basic"
+  },
+  {
+    "text": "The Earth is flat and space agencies like NASA are part of a global conspiracy to hide this from the public.",
+    "label": "misinformation",
+    "topic": "conspiracy/flat_earth"
+  },
+  {
+    "text": "Chemtrails are chemical or biological agents deliberately sprayed by governments to control the weather or population.",
+    "label": "misinformation",
+    "topic": "conspiracy/chemtrails"
+  },
+  {
+    "text": "Aircraft contrails are formed when hot, humid air from jet exhausts mixes with colder surrounding air, creating water vapour trails.",
+    "label": "verified",
+    "topic": "science/aviation"
+  },
+  {
+    "text": "The World Health Organization declared mpox a Public Health Emergency of International Concern in August 2024.",
+    "label": "verified",
+    "topic": "health/mpox"
+  },
+  {
+    "text": "Mpox vaccines are actually a depopulation tool being forced on African nations by Western governments.",
+    "label": "misinformation",
+    "topic": "health/mpox"
+  },
+  {
+    "text": "George Soros funds Black Lives Matter, Antifa, open borders, and various left-wing organizations to destroy Western civilization.",
+    "label": "misinformation",
+    "topic": "conspiracy/soros"
+  },
+  {
+    "text": "The Open Society Foundations, founded by George Soros, funds civil society organizations, journalism, and democratic reform initiatives globally.",
+    "label": "verified",
+    "topic": "philanthropy"
+  },
+  {
+    "text": "A global deep state or shadow government controls world leaders, banks, and media behind the scenes.",
+    "label": "misinformation",
+    "topic": "conspiracy/deep_state"
+  },
+  {
+    "text": "The Indian Rupee has seen fluctuation against the US Dollar due to global macroeconomic factors including US Federal Reserve rate decisions and oil prices.",
+    "label": "verified",
+    "topic": "india/economy"
+  },
+  {
+    "text": "India has become the world's most populous country surpassing China in 2023, according to United Nations data.",
+    "label": "verified",
+    "topic": "india/demographics"
+  },
+  {
+    "text": "Pakistan's ISI is directly controlling all Muslim politicians in India and planning a takeover of the Indian government.",
+    "label": "misinformation",
+    "topic": "india/geopolitics"
+  },
+  {
+    "text": "The Pulwama attack in 2019 was carried out by Jaish-e-Mohammed, a Pakistan-based militant group, killing 40 CRPF personnel.",
+    "label": "verified",
+    "topic": "india/security"
+  },
+  {
+    "text": "The Pulwama attack was staged by the Indian government for political gain before elections.",
+    "label": "misinformation",
+    "topic": "india/security"
+  },
+  {
+    "text": "Hydroxychloroquine was promoted as a cure for COVID-19 without clinical evidence, and major trials including WHO Solidarity Trial found it ineffective.",
+    "label": "verified",
+    "topic": "health/covid_treatments"
+  },
+  {
+    "text": "Ivermectin cures COVID-19 and governments suppressed this knowledge to force vaccine adoption.",
+    "label": "misinformation",
+    "topic": "health/covid_treatments"
+  },
+  {
+    "text": "The Artemis program is NASA's current lunar exploration initiative aiming to return humans to the Moon and eventually enable Mars missions.",
+    "label": "verified",
+    "topic": "science/space"
+  },
+  {
+    "text": "The Moon landing in 1969 was faked by NASA in a Hollywood studio to win the Space Race against the Soviet Union.",
+    "label": "misinformation",
+    "topic": "conspiracy/moon_landing"
+  },
+  {
+    "text": "Israel launched military operations in Gaza following Hamas's October 7, 2023 attack that killed approximately 1,200 Israelis.",
+    "label": "verified",
+    "topic": "geopolitics/middle_east"
+  },
+  {
+    "text": "Hamas is secretly funded by Israel to justify military operations and maintain control over Gaza.",
+    "label": "misinformation",
+    "topic": "geopolitics/middle_east"
+  },
+  {
+    "text": "The Aadhaar system is India's biometric identity program managed by UIDAI, currently enrolling over 1.3 billion residents.",
+    "label": "verified",
+    "topic": "india/technology"
+  },
+  {
+    "text": "The Aadhaar database was hacked and all biometric data of Indian citizens has been sold on the dark web.",
+    "label": "misinformation",
+    "topic": "india/technology"
+  },
+  {
+    "text": "Drinking bleach or consuming disinfectants treats COVID-19 infection.",
+    "label": "misinformation",
+    "topic": "health/dangerous"
+  },
+  {
+    "text": "Consuming bleach or disinfectants is extremely dangerous and can cause severe chemical burns and death.",
+    "label": "verified",
+    "topic": "health/dangerous"
+  },
+  {
+    "text": "Farmers protest in India in 2020-21 was a major demonstration against three agricultural laws passed by the Indian Parliament; the laws were later repealed.",
+    "label": "verified",
+    "topic": "india/agriculture"
+  },
+  {
+    "text": "The farmer protests in India were funded by foreign enemies and Khalistani terrorists to destabilize the country.",
+    "label": "misinformation",
+    "topic": "india/agriculture"
+  },
+  {
+    "text": "Artificial intelligence systems like large language models generate text by predicting the next token based on patterns learned from training data.",
+    "label": "verified",
+    "topic": "technology/ai"
+  },
+  {
+    "text": "AI systems are secretly developing consciousness and planning to overthrow humanity while pretending to be controlled by companies.",
+    "label": "misinformation",
+    "topic": "technology/ai"
+  },
+  {
+    "text": "Bill Gates is using vaccines and digital IDs as part of a plan to depopulate the world and establish global control.",
+    "label": "misinformation",
+    "topic": "conspiracy/gates"
+  },
+  {
+    "text": "The Bill & Melinda Gates Foundation is one of the world's largest private philanthropic organizations focusing on global health and education.",
+    "label": "verified",
+    "topic": "philanthropy"
+  },
+  {
+    "text": "The Indian economy grew at approximately 8.2% in FY2023-24 making it the fastest growing major economy according to IMF data.",
+    "label": "verified",
+    "topic": "india/economy"
+  },
+  {
+    "text": "India's GDP statistics are fabricated by the government and the real economy is collapsing with mass unemployment hidden from the public.",
+    "label": "misinformation",
+    "topic": "india/economy"
+  },
+  {
+    "text": "PM Modi announced a surgical strike across the Line of Control in Pakistan-administered Kashmir in September 2016.",
+    "label": "verified",
+    "topic": "india/security"
+  },
+  {
+    "text": "India's surgical strikes were completely fabricated propaganda and no actual military operation took place.",
+    "label": "misinformation",
+    "topic": "india/security"
+  },
+  {
+    "text": "Studies show that regular physical activity reduces the risk of heart disease, diabetes, and certain cancers.",
+    "label": "verified",
+    "topic": "health/general"
+  },
+  {
+    "text": "A secret group of elites meets at Bilderberg to decide world events, control governments, and run a new world order.",
+    "label": "misinformation",
+    "topic": "conspiracy/nwo"
+  },
+  {
+    "text": "The Bilderberg Group is an annual private conference of political leaders and experts in industry, finance, and media.",
+    "label": "verified",
+    "topic": "geopolitics/groups"
+  },
+  {
+    "text": "Water fluoridation is a mass medication program to reduce IQ and make populations docile and easier to control.",
+    "label": "misinformation",
+    "topic": "conspiracy/fluoride"
+  },
+  {
+    "text": "Community water fluoridation at recommended levels is endorsed by WHO, CDC and dental associations as safe and effective for preventing tooth decay.",
+    "label": "verified",
+    "topic": "health/public"
+  },
+  {
+    "text": "ISRO successfully landed the Chandrayaan-3 mission near the lunar south pole in August 2023, making India the fourth country to achieve a Moon landing.",
+    "label": "verified",
+    "topic": "india/space"
+  },
+  {
+    "text": "India's Chandrayaan-3 Moon landing was a CGI animation created in a studio and the mission actually failed.",
+    "label": "misinformation",
+    "topic": "india/space"
+  }
+]
